@@ -1,11 +1,11 @@
 import React from 'react'
 import { Navbar, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import Login from "../Login"
+import Session from "../Session/index"
 
 export default function Navigation() {
     return (
-        <Navbar collapseOnSelect expand="lg" bg="light" >
+        <Navbar className="mb-1" collapseOnSelect expand="lg" bg="light" >
             <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
@@ -16,13 +16,10 @@ export default function Navigation() {
                     <LinkContainer to="/liste">
                         <Nav.Link>Liste</Nav.Link>
                     </LinkContainer>
-                    <LinkContainer to="/profile">
-                        <Nav.Link>Profile</Nav.Link>
-                    </LinkContainer>
                 </Nav>
             </Navbar.Collapse>
             <Navbar.Collapse className="justify-content-end">
-                <Login />
+                <Session />
             </Navbar.Collapse>
         </Navbar>
     )

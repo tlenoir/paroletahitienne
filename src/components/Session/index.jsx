@@ -2,8 +2,12 @@ import React, { useState } from 'react'
 import firebase from 'firebase/app';
 import 'firebase/auth'
 import 'firebase/database'
-import { Button, Row, Form, Col, Modal, Alert } from 'react-bootstrap'
+import { Button, Row, Form, Col, Modal, Alert, ButtonToolbar, Dropdown } from 'react-bootstrap'
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { Link } from 'react-router-dom';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 
 export default function App() {
     const [user] = useAuthState(firebase.auth())
@@ -37,7 +41,10 @@ function LogIn(props) {
     const handleCloseLogin = () => setShowLogin(false);
     const handleCloseCreate = () => setShowCreate(false);
     const handleShowLogin = () => setShowLogin(true);
-    const handleShowCreate = () => setShowCreate(true);
+    const handleShowCreate = () => {
+        setShowLogin(false)
+        setShowCreate(true)
+    };
 
     const signInWithEmail = (event) => {
         firebase.auth().signInWithEmailAndPassword(register.email, register.passwd)
@@ -52,6 +59,19 @@ function LogIn(props) {
         event.preventDefault()
     }
 
+    /* const signInAnonymous = (event) => {
+        firebase.auth().signInAnonymously()
+            .then(() => {
+                return firebase.auth().currentUser.updateProfile({
+                    displayName: "Anonymous"
+                });
+            })
+            .catch(error => {
+                setError(error.message)
+            })
+        event.preventDefault()
+    } */
+
     function createNewUser(event) {
         firebase.auth()
             .createUserWithEmailAndPassword(register.email, register.passwd)
@@ -63,7 +83,7 @@ function LogIn(props) {
                         email: register.email,
                         firstname: register.firstname,
                         lastname: register.lastname,
-                        dateCreatedAccount: firebase.database.ServerValue.TIMESTAMP,
+                        dateCreatedAccount: firebase.firestore.Timestamp.fromDate(new Date()),
                         username: register.username,
                     });
             })
@@ -98,9 +118,9 @@ function LogIn(props) {
 
     return (
         <span>
-            <Button onClick={handleShowLogin} variant="primary">Se connecter</Button>
-            <Button onClick={handleShowCreate} variant="success">Créer un compte</Button>
-
+            <ButtonToolbar>
+                <Button className="ml-1" onClick={handleShowLogin} variant="link">Se connecter</Button>
+            </ButtonToolbar>
 
             <Modal show={showLogin} onHide={handleCloseLogin}>
                 <Modal.Header closeButton>
@@ -138,6 +158,9 @@ function LogIn(props) {
                         }
                     </Modal.Footer>
                 </Form>
+                <ButtonToolbar>
+                    <Button size="sm" onClick={handleShowCreate} variant="link">Créer un compte</Button>
+                </ButtonToolbar>
             </Modal>
 
             <Modal show={showCreate} onHide={handleCloseCreate}>
@@ -168,7 +191,7 @@ function LogIn(props) {
                                 Nom
                                     </Form.Label>
                             <Col sm="10">
-                                <Form.Control type="text" required value={register.lastname} name="lastname" onChange={handleChange} />
+                                <Form.Control className="text-capitalize" type="text" required value={register.lastname} name="lastname" onChange={handleChange} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextEmail">
@@ -176,7 +199,7 @@ function LogIn(props) {
                                 Prénom
                                     </Form.Label>
                             <Col sm="10">
-                                <Form.Control type="text" required value={register.firstname} name="firstname" onChange={handleChange} />
+                                <Form.Control className="text-capitalize" type="text" required value={register.firstname} name="firstname" onChange={handleChange} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextEmail">
@@ -210,7 +233,21 @@ function LogOut() {
         firebase.auth().signOut()
     }
     return (
-        <Button onClick={handleClick} variant="outline-danger">Se Déconnecter</Button>
+        <ButtonToolbar>
+            <Dropdown>
+                <Dropdown.Toggle variant="link" id="dropdown-custom-1">
+                    <FontAwesomeIcon
+                        icon={faUserCog}
+                        size="lg"
+                    />
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="dropdown-menu-md-right">
+                    <Dropdown.Item as={Link} to="/profile" eventKey="1">Profile</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={handleClick} eventKey="4">Se Déconnecter</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        </ButtonToolbar>
     )
 }
 

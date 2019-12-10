@@ -2,13 +2,13 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import { useDocumentOnce } from 'react-firebase-hooks/firestore';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { Alert, Spinner, Jumbotron, Container } from 'react-bootstrap';
 
 export default function Parole() {
     const { id } = useParams()
-    const [value, loading, error] = useDocumentOnce(
-        firebase.firestore().doc('paroles/' + id),
+    const [value, loading, error] = useDocument(
+        firebase.firestore().doc(`paroles/${id}`),
         {
             snapshotListenOptions: { includeMetadataChanges: true },
         }
