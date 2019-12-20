@@ -29,12 +29,79 @@ const FirebaseContext = React.createContext({
     useDocument,
     useCollection,
     user: auth().currentUser,
-    addParole: (data) => { return new Promise() }
+    addParole: (data) => { return new Promise() },
+    editParole: (data) => { return new Promise() },
+    doSignUpWithEmailAndPasswd: (data) => { return new Promise() },
+    doSignInWithEmailAndPasswd: (data) => { return new Promise() },
+    doSignInWithFacebook: () => { },
+    doSignInWithGoogle: () => { },
+
 })
 
 function Firebase({ children }) {
 
     const [user] = useAuthState(auth())
+
+    const doSignUpWithEmailAndPasswd = (data) => {
+        return new Promise((resolve, reject) => {
+            firestore().collection('utilisateurs')
+                .where("utilsateur", "==", data.utilsateur).get()
+                .then((usernames) => {
+                    if (usernames.size === 0) {
+                        auth().createUserWithEmailAndPassword(data.email, data.passwd)
+                            .then((authUser) => {
+                                return firestore().collection('utilisateurs')
+                                    .doc(authUser.user.uid)
+                                    .set({ ...data, passwd: '' })
+                            })
+                            .then(() => {
+                                return auth().currentUser.sendEmailVerification({
+                                    url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT,
+                                })
+                            })
+                            .then(() => {
+                                auth().currentUser.updateProfile({
+                                    displayName: data.utilsateur,
+                                })
+                                resolve(auth().currentUser)
+                            })
+                            .catch(e => { reject(e) })
+                    } else {
+                        reject({ message: "Ce nom d'utilisateur est déjà utilisé!" })
+                    }
+                })
+        })
+    }
+
+    const doSignInWithGoogle = () =>
+        auth().signInWithPopup(new auth.GoogleAuthProvider())
+            .then((authUser) => {
+                firestore().collection('utilisateurs').doc(authUser.user.uid)
+                    .set({
+                        utilisateur: authUser.user.displayName,
+                        email: authUser.user.email,
+                        date_creation: authUser.user.metadata.creationTime
+                    })
+            })
+
+    const doSignInWithFacebook = () =>
+        auth().signInWithPopup(new auth.FacebookAuthProvider())
+            .then((authUser) => {
+                firestore().collection('utilisateurs').doc(authUser.user.uid)
+                    .set({
+                        utilisateur: authUser.user.displayName,
+                        email: authUser.user.email,
+                        date_creation: authUser.user.metadata.creationTime
+                    })
+            })
+
+    const doSignInWithEmailAndPasswd = (data) => {
+        return new Promise((resolve, reject) => {
+            auth().signInWithEmailAndPassword(data.email, data.passwd)
+                .then((auth) => { resolve(auth) })
+                .catch(e => { reject(e) })
+        })
+    }
 
     const addParole = (data) => {
         return new Promise((resolve, reject) => {
@@ -49,6 +116,27 @@ function Firebase({ children }) {
         })
     }
 
+    const editParole = (data) => {
+        return new Promise((resolve, reject) => {
+            const reference = firestore().doc(`paroles/${data.id}`)
+            const user_ = user ? user.displayName : 'anonymous'
+            firestore().runTransaction(async (tr) => {
+                const doc = await tr.get(reference)
+                const paroles = String(doc.data().paroles)
+                const utilisateur = String(doc.data().ajout_par)
+                tr.update(reference, {
+                    paroles: data.edit,
+                    editBy: user_,
+                    date_edit: data.date_edit
+                })
+                firestore().collection(`notifications/${utilisateur}/chansons`).add({
+                    paroles: [paroles, data.edit],
+                    reference,
+                    editee_par: user_
+                })
+            })
+        })
+    }
 
     const firebase = {
         storage,
@@ -58,7 +146,12 @@ function Firebase({ children }) {
         useDocument,
         useCollection,
         user,
-        addParole
+        addParole,
+        editParole,
+        doSignUpWithEmailAndPasswd,
+        doSignInWithEmailAndPasswd,
+        doSignInWithFacebook,
+        doSignInWithGoogle
     }
 
     return (

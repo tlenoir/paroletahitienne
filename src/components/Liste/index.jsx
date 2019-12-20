@@ -43,7 +43,7 @@ function AjoutParole() {
     const [submit, setSubmit] = useState(false)
     const [show, setShow] = useState(false)
     const [item, setItem] = useState({
-        parole: '',
+        paroles: '',
         artistes: '',
         titre: '',
         groupes: '',
@@ -76,7 +76,7 @@ function AjoutParole() {
                 .then(() => {
                     setShow(false)
                     setItem({
-                        parole: '',
+                        paroles: '',
                         artistes: '',
                         titre: '',
                         groupes: '',
@@ -140,8 +140,8 @@ function AjoutParole() {
                             <Form.Label>Parole</Form.Label>
                             <Form.Control
                                 readOnly={submit}
-                                value={item.parole}
-                                name='parole'
+                                value={item.paroles}
+                                name='paroles'
                                 onChange={handleChange}
                                 as="textarea" rows="6" />
                         </Form.Group>

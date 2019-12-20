@@ -9,7 +9,7 @@ export default function App() {
     const { id } = useParams()
     const [submitting, setSubmitting] = useState(true)
     const [item, setItem] = useState({
-        parole: '',
+        paroles: '',
         titre: ''
     })
 
@@ -36,7 +36,7 @@ export default function App() {
         if (doc)
             setItem({
                 titre: doc.data().titre,
-                parole: doc.data().parole
+                paroles: doc.data().paroles
             })
     }, [doc])
 
@@ -62,8 +62,8 @@ export default function App() {
                         <Form.Group controlId="exampleForm.ControlTextareaParole">
                             <Form.Label srOnly={submitting}>Parole</Form.Label>
                             <Form.Control
-                                value={item.parole}
-                                name="parole"
+                                value={item.paroles}
+                                name="paroles"
                                 plaintext={submitting}
                                 required
                                 onChange={handleChange}
