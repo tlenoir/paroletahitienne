@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import React, { useDebugValue } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import routes from '../../constants/routes'
+import routes, { routesParams } from '../../constants/routes'
 import { Firebase } from "../../stores/Firebase/index";
 import Navigation from "../Navigation/index"
 
@@ -14,9 +14,10 @@ export default function App() {
             <Firebase>
                 <Navigation />
                 <div className="container">
-                <Switch>
-                    {routes.map(route => <Route key={route.path} {...route} />)}
-                </Switch>
+                    <Switch>
+                        {routes.map(route => <Route key={route.path} {...route} />)}
+                        {routesParams.map(route => <Route key={route.path} {...route} />)}
+                    </Switch>
                 </div>
             </Firebase>
         </BrowserRouter>

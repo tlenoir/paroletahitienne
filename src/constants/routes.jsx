@@ -1,6 +1,7 @@
 import Accueil from '../components/Accueil/index'
 import Apropos from '../components/Apropos/index'
 import Liste from '../components/Liste/index'
+import Parole from '../components/Parole/index'
 
 export default [
     {
@@ -22,3 +23,11 @@ export default [
         name: 'Liste'
     },
 ];
+
+export const routesParams = [
+    {
+        path: "/liste=:id",
+        component: Parole,
+        exact: true,
+    },
+]
