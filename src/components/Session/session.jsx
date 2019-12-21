@@ -66,7 +66,7 @@ function NotUser() {
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Connectez-vous ou avec
+                        Connectez-vous via
                         <FontAwesomeIcon
                             as={Link}
                             className="mr-1" onClick={handleFacebook}
