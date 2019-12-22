@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { Spinner, Jumbotron, Button, Alert, Form } from 'react-bootstrap'
 import TextareaAutosize from 'react-textarea-autosize'
 
-export default function App() {
+export default function Parole() {
     const firebase = useContext(FirebaseContext)
     const { id } = useParams()
     const [submitting, setSubmitting] = useState(true)
@@ -33,10 +33,14 @@ export default function App() {
     }
 
     useEffect(() => {
-        if (doc)
+        if (doc !== undefined && doc.exists)
             setItem({
                 titre: doc.data().titre,
                 paroles: doc.data().paroles
+            })
+        else
+            setItem({
+                titre: "Ce document n'existe pas."
             })
     }, [doc])
 
@@ -46,7 +50,11 @@ export default function App() {
             {loading && <Spinner animation="grow" variant="primary" />}
             {doc &&
                 <Jumbotron>
-                    <Button variant="link" size="sm" onClick={handleEdit}>edité</Button>
+                    <Button disabled={doc}
+                        variant="link" size="sm"
+                        onClick={handleEdit}>
+                        edité
+                    </Button>
                     <Form>
                         <Form.Group controlId="exampleForm.ControlInputTitre">
                             <Form.Label srOnly={submitting}>Titre</Form.Label>

@@ -3,6 +3,9 @@ import Apropos from '../components/Apropos/index'
 import Liste from '../components/Liste/index'
 import Parole from '../components/Parole/index'
 import SignUp from '../components/Session/signUp'
+import SignIn from '../components/Session/signIn'
+import Profile from '../components/Profile/index'
+import No404 from '../components/No404/index'
 
 export default [
     {
@@ -23,7 +26,7 @@ export default [
         exact: true,
         name: 'Liste'
     },
-];
+]
 
 export const routesParams = [
     {
@@ -35,5 +38,19 @@ export const routesParams = [
         path: "/signup",
         component: SignUp,
         exact: true,
+    },
+    {
+        path: "/signin",
+        component: SignIn,
+        exact: true,
+    },
+    {
+        path: "/profile",
+        component: Profile,
+        exact: true,
+    },
+    {
+        path: "*",
+        component: No404,
     },
 ]

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const ThemesContext = React.createContext({
     themes: {
@@ -19,6 +20,22 @@ function Themes({ children }) {
         bg: "light",
         color: "red"
     })
+
+    const location = useLocation()
+
+    const capitalize = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    useEffect(() => {
+        const name_location = location.pathname.slice(1)
+        if (name_location.length > 0)
+            document.title = capitalize(name_location)
+        else
+            document.title = 'Parole Héritage'
+    }, [location])
+
+
     return (
         <ThemesContext.Provider value={{ themes, updateThemes }} >
             {children}

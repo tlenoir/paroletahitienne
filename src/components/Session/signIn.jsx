@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { FirebaseContext } from "../../stores/Firebase"
-import { Button, Modal, Form, Dropdown, Alert, } from 'react-bootstrap'
+import { Button, Card, Form, Alert, } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserCog } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle, faFacebookF } from '@fortawesome/free-brands-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
-function NotUser() {
+export default function SignIn() {
     const firebase = useContext(FirebaseContext)
-    const [show, setShow] = useState(false)
+    const history = useHistory()
     const [validated, setValidated] = useState(false)
     const [error, setError] = useState('')
     const [submitting, setSubmitting] = useState(false)
@@ -24,20 +23,16 @@ function NotUser() {
         })
     }
 
-    const handleShow = () => setShow(true)
-    const handleClose = () => {
-        setShow(false)
-        setError('')
-    }
-
     const handleSubmit = (event) => {
         const form = event.currentTarget
         if (form.checkValidity()) {
             setSubmitting(true)
             firebase.doSignInWithEmailAndPasswd(register)
                 .then(() => {
-                    setShow(false)
                     setRegister({ email: '', passwd: '' })
+                })
+                .then(() => {
+                    history.push('/')
                 })
                 .catch(e => {
                     setError(e.message)
@@ -58,14 +53,9 @@ function NotUser() {
 
     return (
         <React.Fragment>
-
-            <Button variant="dark" onClick={handleShow}>
-                S'identifier
-            </Button>
-
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
+            <Card>
+                <Card.Header>
+                    <Card.Title>
                         Connectez-vous via
                         <FontAwesomeIcon className="ml-2"
                             onClick={handleFacebook}
@@ -73,10 +63,10 @@ function NotUser() {
                         <FontAwesomeIcon className="ml-2"
                             onClick={handleGoogle}
                             icon={faGoogle} color="#DD4B39" />
-                    </Modal.Title>
-                </Modal.Header>
+                    </Card.Title>
+                </Card.Header>
                 <Form noValidate validated={validated} onSubmit={handleSubmit} >
-                    <Modal.Body>
+                    <Card.Body>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Email/Identifiant</Form.Label>
                             <Form.Control required type="email" readOnly={submitting}
@@ -88,18 +78,12 @@ function NotUser() {
                             <Form.Control required type="password" readOnly={submitting}
                                 value={register.passwd} name="passwd" onChange={handleChange} />
                         </Form.Group>
-                    </Modal.Body>
-                    <Modal.Footer>
+                    </Card.Body>
+                    <Card.Footer>
                         <Button as={Link} to="/signup"
                             variant="link"
-                            onClick={handleClose}
                             disabled={submitting}>
                             créer un compte
-                        </Button>
-                        <Button variant="secondary"
-                            onClick={handleClose}
-                            disabled={submitting}>
-                            Fermer
                         </Button>
                         <Button variant="primary"
                             type="submit"
@@ -109,39 +93,9 @@ function NotUser() {
                         {error &&
                             <Alert variant="danger">{error}</Alert>
                         }
-                    </Modal.Footer>
+                    </Card.Footer>
                 </Form>
-            </Modal>
+            </Card>
         </React.Fragment>
     )
 }
-
-function User() {
-    const firebase = useContext(FirebaseContext)
-    const user = firebase.user
-
-    const handleClick = () => {
-        firebase.auth().signOut()
-    }
-
-    return (
-        <Dropdown>
-            <Dropdown.Toggle
-                variant="info"
-                id="dropdown-basic">
-                <FontAwesomeIcon
-                    className="mr-1"
-                    icon={faUserCog} />
-                {user.displayName}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu className="dropdown-menu-md-right">
-                <Dropdown.Item as={Link} to='/profile'>Profile</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={handleClick} >Déconnecter</Dropdown.Item>
-            </Dropdown.Menu>
-        </Dropdown>
-    )
-}
-
-export { User, NotUser }

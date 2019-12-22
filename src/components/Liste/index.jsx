@@ -8,7 +8,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import 'moment/locale/fr'
 
-export default function App() {
+export default function Liste() {
     const firebase = useContext(FirebaseContext)
 
     const [docs, loading, error] = firebase.useCollection(
@@ -26,7 +26,10 @@ export default function App() {
                     <AjoutParole />
                     <ListGroup variant="flush">
                         {docs.docs.map(doc => (
-                            <ListGroup.Item variant="light" as={Link} to={`/liste=${doc.id}`} key={doc.id}>{doc.data().titre}</ListGroup.Item>
+                            <ListGroup.Item variant="light" 
+                            as={Link} to={`/liste=${doc.id}`} 
+                            key={doc.id}>{doc.data().titre}
+                            </ListGroup.Item>
                         ))}
                     </ListGroup>
                 </React.Fragment>

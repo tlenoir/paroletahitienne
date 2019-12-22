@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 import 'moment/locale/fr'
 
-export default function App() {
+export default function SignUp() {
 
     const firebase = useContext(FirebaseContext)
 

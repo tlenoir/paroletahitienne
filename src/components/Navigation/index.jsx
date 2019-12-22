@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import routes from "../../constants/routes"
 import Session from "../Session/index"
 
-export default function App() {
+export default function Navigation() {
     return (
         <Navbar className="mb-2" collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand href="/">Parole Héritage</Navbar.Brand>

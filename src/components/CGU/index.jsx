@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function App() {
+export default function Cgu() {
     return (
         <React.Fragment>
             <h2>Conditions d'utilisation</h2>
