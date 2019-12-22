@@ -50,7 +50,7 @@ export default function Parole() {
             {loading && <Spinner animation="grow" variant="primary" />}
             {doc &&
                 <Jumbotron>
-                    <Button disabled={doc}
+                    <Button disabled={!doc.exists}
                         variant="link" size="sm"
                         onClick={handleEdit}>
                         edité

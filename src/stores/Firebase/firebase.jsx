@@ -76,11 +76,15 @@ function Firebase({ children }) {
     const doSignInWithGoogle = () =>
         auth().signInWithPopup(new auth.GoogleAuthProvider())
             .then((authUser) => {
+                console.log(authUser)
                 firestore().collection('utilisateurs').doc(authUser.user.uid)
                     .set({
                         utilisateur: authUser.user.displayName,
+                        avatar: authUser.user.photoURL,
                         email: authUser.user.email,
-                        date_creation: authUser.user.metadata.creationTime
+                        date_creation: authUser.user.metadata.creationTime,
+                        prenom: authUser.additionalUserInfo.profile.given_name,
+                        nom: authUser.additionalUserInfo.profile.family_name
                     })
             })
 
@@ -90,8 +94,11 @@ function Firebase({ children }) {
                 firestore().collection('utilisateurs').doc(authUser.user.uid)
                     .set({
                         utilisateur: authUser.user.displayName,
+                        avatar: authUser.user.photoURL+ "?type=large",
                         email: authUser.user.email,
-                        date_creation: authUser.user.metadata.creationTime
+                        date_creation: authUser.user.metadata.creationTime,
+                        prenom: authUser.additionalUserInfo.profile.first_name,
+                        nom: authUser.additionalUserInfo.profile.last_name
                     })
             })
 
@@ -107,9 +114,6 @@ function Firebase({ children }) {
         return new Promise((resolve, reject) => {
             firestore().collection('chansons').add({ ...data })
                 .then(reference => {
-                    firestore()
-                        .collection(user ? `utilisateurs/${user.uid}/chansons` : 'utilisateurs/anonymous/chansons')
-                        .add({ reference })
                     resolve(reference)
                 })
                 .catch(e => { reject(e) })

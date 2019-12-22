@@ -1,22 +1,48 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useReducer, useEffect } from 'react'
 import { FirebaseContext } from "../../stores/Firebase/index"
 
-import { Link } from 'react-router-dom'
-import { Spinner, ListGroup, Alert, Button, Modal, Form, Col, ButtonGroup } from 'react-bootstrap'
+import { Link, useHistory } from 'react-router-dom'
+import { Spinner, Alert, Button, Modal, Form, Col, ButtonGroup, Table } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import 'moment/locale/fr'
 
+const initialState = {orderBy: 'titre'}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'artiste':
+      return {orderBy: 'artistes'}
+    case 'groupe':
+      return {orderBy: 'groupes'}
+    case 'date':
+        return {orderBy: 'date_ajout'}
+    case 'titre':
+        return {orderBy: 'titre'}
+    default:
+      return state
+  }
+}
+
 export default function Liste() {
     const firebase = useContext(FirebaseContext)
+    const history = useHistory()
+
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const [docs, loading, error] = firebase.useCollection(
-        firebase.firestore().collection('chansons'),
+        firebase.firestore().collection('chansons').orderBy(state.orderBy),
         {
             snapshotListenOptions: { includeMetadataChanges: true }
         }
     )
+
+    const handleClick = (event, id) => {
+        history.push(`/liste=${id}`)
+        event.preventDefault()
+    }
+
     return (
         <React.Fragment>
             {error && <Alert variant="danger">Erreur: {error.message}</Alert>}
@@ -24,14 +50,32 @@ export default function Liste() {
             {docs && (
                 <React.Fragment>
                     <AjoutParole />
-                    <ListGroup variant="flush">
-                        {docs.docs.map(doc => (
-                            <ListGroup.Item variant="light" 
-                            as={Link} to={`/liste=${doc.id}`} 
-                            key={doc.id}>{doc.data().titre}
-                            </ListGroup.Item>
+                    <Table striped responsive hover>
+                    <thead>
+                        <tr>
+                        <th>#</th>
+                        <th onClick={() => dispatch({type: 'titre'})}>Titre</th>
+                        <th onClick={() => dispatch({type: 'artiste'})}>Artiste</th>
+                        <th onClick={() => dispatch({type: 'groupe'})}>Groupe</th>
+                        <th onClick={() => dispatch({type: 'date'})}>Date d'ajout</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {docs.docs.map((doc, i) => (
+                        <tr key={doc.id} onClick={(e) => handleClick(e, doc.id)}>
+                            <td>{i+1}</td>
+                            <td>{doc.data().titre}</td>
+                            <td>{doc.data().artistes.map(artiste => (
+                                <span>{artiste} </span>
+                            ))}</td>
+                            <td>{doc.data().groupes.map(groupe => (
+                                <span>{groupe} </span>
+                            ))}</td>
+                            <td>{doc.data().date_ajout}</td>
+                        </tr>
                         ))}
-                    </ListGroup>
+                    </tbody>
+                    </Table>
                 </React.Fragment>
             )}
         </React.Fragment>
@@ -64,8 +108,9 @@ function AjoutParole() {
                 ...item,
                 date_ajout: moment().local('fr').format('LLL'),
                 ajout_par: user ? user.displayName : 'anonymous',
-                artistes: item.artistes.length > 0 ? item.artistes.split(';') : '',
-                groupes: item.groupes.length > 0 ? item.groupes.split(';') : ''
+                uid: user ? user.uid : 'anonymous',
+                artistes: item.artistes.length > 0 ? item.artistes.split('') : [''],
+                groupes: item.groupes.length > 0 ? item.groupes.split('') : ['']
             })
             setSubmit(true)
         }
@@ -125,7 +170,7 @@ function AjoutParole() {
                                     value={item.artistes}
                                     name='artistes'
                                     onChange={handleChange}
-                                    type="text" placeholder="art1;art2" />
+                                    type="text" placeholder="art1art2" />
                             </Form.Group>
                         </Form.Row>
                         <Form.Group controlId="formGridGroup">
@@ -135,7 +180,7 @@ function AjoutParole() {
                                 value={item.groupes}
                                 name='groupes'
                                 onChange={handleChange}
-                                type="text" placeholder="grp1;grp2" />
+                                type="text" placeholder="grp1grp2" />
                         </Form.Group>
 
                         <Form.Group controlId="exampleForm.Control
