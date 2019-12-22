@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/paroletahitienne/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/paroletahitienne/static/js/main.16429caf.chunk.js",
-    "main.js.map": "/paroletahitienne/static/js/main.16429caf.chunk.js.map",
+    "main.js": "/paroletahitienne/static/js/main.c790b02c.chunk.js",
+    "main.js.map": "/paroletahitienne/static/js/main.c790b02c.chunk.js.map",
     "runtime-main.js": "/paroletahitienne/static/js/runtime-main.b7c5879e.js",
     "runtime-main.js.map": "/paroletahitienne/static/js/runtime-main.b7c5879e.js.map",
     "static/css/2.17e5ed98.chunk.css": "/paroletahitienne/static/css/2.17e5ed98.chunk.css",
-    "static/js/2.9f7b3b57.chunk.js": "/paroletahitienne/static/js/2.9f7b3b57.chunk.js",
-    "static/js/2.9f7b3b57.chunk.js.map": "/paroletahitienne/static/js/2.9f7b3b57.chunk.js.map",
+    "static/js/2.195bfa60.chunk.js": "/paroletahitienne/static/js/2.195bfa60.chunk.js",
+    "static/js/2.195bfa60.chunk.js.map": "/paroletahitienne/static/js/2.195bfa60.chunk.js.map",
     "index.html": "/paroletahitienne/index.html",
-    "precache-manifest.994d04bd4f30abec13a4bb549af0a606.js": "/paroletahitienne/precache-manifest.994d04bd4f30abec13a4bb549af0a606.js",
+    "precache-manifest.93f8a0007182cec9f9949abe41b6cb1e.js": "/paroletahitienne/precache-manifest.93f8a0007182cec9f9949abe41b6cb1e.js",
     "service-worker.js": "/paroletahitienne/service-worker.js",
     "static/css/2.17e5ed98.chunk.css.map": "/paroletahitienne/static/css/2.17e5ed98.chunk.css.map",
     "static/css/main.5ecd60fb.chunk.css.map": "/paroletahitienne/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.9f7b3b57.chunk.js.LICENSE": "/paroletahitienne/static/js/2.9f7b3b57.chunk.js.LICENSE"
+    "static/js/2.195bfa60.chunk.js.LICENSE": "/paroletahitienne/static/js/2.195bfa60.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.b7c5879e.js",
     "static/css/2.17e5ed98.chunk.css",
-    "static/js/2.9f7b3b57.chunk.js",
+    "static/js/2.195bfa60.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.16429caf.chunk.js"
+    "static/js/main.c790b02c.chunk.js"
   ]
 }
