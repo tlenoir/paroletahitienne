@@ -1,0 +1,14 @@
+.ge-previewer {
+  padding: 20px;
+  background: white;
+  box-sizing: border-box;
+}
+
+.ge-previewer-edit {
+  width: 100%;
+  overflow-y: auto;
+}
+
+.ge-previewer-preview {
+  padding: 30px;
+}

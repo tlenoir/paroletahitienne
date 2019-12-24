@@ -1,0 +1,42 @@
+/**
+ * Media query
+ */
+
+@media (min-width: 1024px) {
+  html {
+    padding: 20px 0;
+    margin: 0 auto;
+    width: 1024px;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+}
+
+/**
+ * APP styles
+ */
+
+.ge-edit-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/**
+ * Global styles
+ */
+
+button {
+  border: none;
+}
+
+html {
+  font: 14px/1.5 Arial,"Microsoft Yahei","Hiragino Sans GB",sans-serif;
+  background: rgb(241, 240, 233);
+}
+
+textarea {
+  resize: none;
+  outline: none;
+  padding: 0;
+}

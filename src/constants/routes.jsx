@@ -5,6 +5,8 @@ import Parole from '../components/Parole/index'
 import SignUp from '../components/Session/signUp'
 import SignIn from '../components/Session/signIn'
 import Profile from '../components/Profile/index'
+import AdvanceParole from '../components/Parole/AvanceParole/avance'
+
 import No404 from '../components/No404/index'
 
 export default [
@@ -33,7 +35,7 @@ export const routesParams = [
         path: "/liste=:id",
         component: Parole,
         exact: true,
-    }, 
+    },
     {
         path: "/signup",
         component: SignUp,
@@ -47,6 +49,11 @@ export const routesParams = [
     {
         path: "/profile",
         component: Profile,
+        exact: true,
+    },
+    {
+        path: "/advance",
+        component: AdvanceParole,
         exact: true,
     },
     {

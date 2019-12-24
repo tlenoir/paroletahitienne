@@ -1,0 +1,45 @@
+.ge-lyrics {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ge-lyrics .ge-chord-item {
+  margin: 5px 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Anchor for each character */
+.ge-lyrics .ge-anchor {
+  position: relative;
+  margin-left: 1em;
+  margin-right: 3px;
+  display: inline-flex;
+  justify-content: center;
+  height: 25px;
+  line-height: 2em;
+  border-bottom: 1px solid #24292e;
+}
+
+/* Chord name above anchor */
+.ge-lyrics .ge-anchor .ge-anchor-chordname {
+  position: absolute;
+  top: -18px;
+  color: indianred;
+  letter-spacing: 1px;
+}
+
+/* Chord image above anchor */
+.ge-lyrics .ge-anchor .ge-anchor-chordimg {
+  position: absolute;
+  top: -45px;
+  left: -10px;
+  color: indianred;
+}
+
+.ge-lyrics .ge-extra {
+  display: inline-block;
+  height: 25px;
+  line-height: 2em;
+  border-bottom: 1px solid white;
+}

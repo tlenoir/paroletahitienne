@@ -49,7 +49,7 @@ export default function Liste() {
             {loading && <Spinner animation="grow" variant="primary"></Spinner>}
             {docs && (
                 <React.Fragment>
-                    <AjoutParole />
+                        <AjoutParole />
                     <Table striped responsive hover>
                     <thead>
                         <tr>
@@ -57,7 +57,7 @@ export default function Liste() {
                         <th onClick={() => dispatch({type: 'titre'})}>Titre</th>
                         <th onClick={() => dispatch({type: 'artiste'})}>Artiste</th>
                         <th onClick={() => dispatch({type: 'groupe'})}>Groupe</th>
-                        <th onClick={() => dispatch({type: 'date'})}>Date d'ajout</th>
+                        <th onClick={() => dispatch({type: 'date'})}>Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,8 +109,8 @@ function AjoutParole() {
                 date_ajout: moment().local('fr').format('LLL'),
                 ajout_par: user ? user.displayName : 'anonymous',
                 uid: user ? user.uid : 'anonymous',
-                artistes: item.artistes.length > 0 ? item.artistes.split('') : [''],
-                groupes: item.groupes.length > 0 ? item.groupes.split('') : ['']
+                artistes: item.artistes.length > 0 ? item.artistes.split(';') : ['Inconnu'],
+                groupes: item.groupes.length > 0 ? item.groupes.split(';') : ['Inconnu']
             })
             setSubmit(true)
         }
@@ -137,11 +137,22 @@ function AjoutParole() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [submit])
 
+    const btnCircle = {
+        borderRadius: '65%',
+        left: '3%',
+        bottom: '3%'
+    }
+
     return (
         <React.Fragment>
-            <Button onClick={handleOpen} variant="link">
+            <Button className="d-none d-sm-block" onClick={handleOpen} variant="link">
                 <FontAwesomeIcon className="mr-1" icon={faPlus} />
                 Ajouter une chanson
+            </Button>
+            <Button className="d-sm-none d-block fixed-bottom" size="lg"
+                style={btnCircle}
+                onClick={handleOpen} variant="dark" >
+                <FontAwesomeIcon icon={faPlus} size="lg" />
             </Button>
 
             <Modal size="lg" show={show} onHide={handleClose}>
@@ -170,7 +181,7 @@ function AjoutParole() {
                                     value={item.artistes}
                                     name='artistes'
                                     onChange={handleChange}
-                                    type="text" placeholder="art1art2" />
+                                    type="text" placeholder="art1;art2" />
                             </Form.Group>
                         </Form.Row>
                         <Form.Group controlId="formGridGroup">
@@ -180,7 +191,7 @@ function AjoutParole() {
                                 value={item.groupes}
                                 name='groupes'
                                 onChange={handleChange}
-                                type="text" placeholder="grp1grp2" />
+                                type="text" placeholder="grp1;grp2" />
                         </Form.Group>
 
                         <Form.Group controlId="exampleForm.Control
@@ -197,9 +208,8 @@ function AjoutParole() {
                     <Modal.Footer>
                         <ButtonGroup>
                             <Button 
-                                disabled={submit}
                                 size="sm" as={Link}
-                                to='/' variant="link" onClick={handleClose}>
+                                to='/advance?create=lyrics' variant="link" onClick={handleClose}>
                                 création/avancée
                             </Button>
                             <Button 
