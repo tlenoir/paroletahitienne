@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/paroletahitienne/precache-manifest.4e54a48075470981bf6aa3135ef8596e.js"
+  "/paroletahitienne/precache-manifest.5492b69bc2a6b777ad354087a2f3163c.js"
 );
 
 self.addEventListener('message', (event) => {
