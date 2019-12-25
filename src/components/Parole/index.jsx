@@ -11,13 +11,13 @@ export default function Parole() {
     const firebase = useContext(FirebaseContext)
     const { id } = useParams()
     const [submitting, setSubmitting] = useState(true)
+    const [mode, setMode] = useState(false)
     const [item, setItem] = useState({
         paroles: '',
         titre: '',
         artistes: '',
         groupes: '',
     })
-    const [mode, setMode] = useState(false)
     const [itemPreview, setItemPreview] = useState({
         content: '',
         song: '',
@@ -51,8 +51,8 @@ export default function Parole() {
             setItem({
                 titre: doc.data().titre,
                 paroles: doc.data().paroles,
-                artistes: doc.data().artistes,
-                groupes: doc.data().groupes
+                artistes: doc.data().artistes.join(';'),
+                groupes: doc.data().groupes.join(';')
             })
         }
         else
@@ -64,10 +64,10 @@ export default function Parole() {
 
     const handleMode = () => {
         setItemPreview({
-            content: item.paroles,
-            singer: item.artistes,
-            composer: item.groupes,
-            song: item.titre
+            content: doc.data().paroles,
+            singer: doc.data().artistes,
+            composer: doc.data().groupes,
+            song: doc.data().titre
         })
         setMode(!mode)
     }
@@ -76,16 +76,21 @@ export default function Parole() {
         <React.Fragment>
             {error && <Alert variant="danger">Erreur: {error.message}</Alert>}
             {loading && <Spinner animation="grow" variant="primary" />}
-            {doc &&
+            {doc && doc.exists &&
                 <Card>
                     <Breadcrumb>
                         <Breadcrumb.Item
                             onClick={handleEdit}>
-                            Editée <FontAwesomeIcon size="lg" icon={faEdit} />
+                            {submitting ?
+                                <span>
+                                    Editée <FontAwesomeIcon size="lg" icon={faEdit} />
+                                </span> :
+                                'Annulé'}
                         </Breadcrumb.Item>
                         <Breadcrumb.Item
                             onClick={handleMode}>
-                            Change mode <FontAwesomeIcon size="lg" icon={faFileContract} />
+                            Affichage {mode ? 'Compositeur ' : 'simple '}
+                            <FontAwesomeIcon size="lg" icon={faFileContract} />
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <Card.Body>
@@ -146,6 +151,7 @@ export default function Parole() {
                     </Card.Body>
                 </Card>
             }
+            {doc && !doc.exists && <Alert variant="info">Ce document n'existe pas.</Alert>}
         </React.Fragment>
     )
 }

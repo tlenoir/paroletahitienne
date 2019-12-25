@@ -3,6 +3,7 @@ import { Form, Col, Row } from 'react-bootstrap'
 import Previewer from './components/Previewer/Previewer'
 import TextareaAutosize from 'react-textarea-autosize'
 
+
 export default function AvanceParole() {
     const [item, setItem] = useState({
         content: '',

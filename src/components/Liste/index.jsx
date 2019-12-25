@@ -8,6 +8,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import 'moment/locale/fr'
 
+import './liste.css'
+
 const initialState = {orderBy: 'titre'}
 
 function reducer(state, action) {
@@ -65,12 +67,8 @@ export default function Liste() {
                         <tr key={doc.id} onClick={(e) => handleClick(e, doc.id)}>
                             <td>{i+1}</td>
                             <td>{doc.data().titre}</td>
-                            <td>{doc.data().artistes.map(artiste => (
-                                <span>{artiste} </span>
-                            ))}</td>
-                            <td>{doc.data().groupes.map(groupe => (
-                                <span>{groupe} </span>
-                            ))}</td>
+                            <td>{doc.data().artistes.join(';')}</td>
+                            <td>{doc.data().groupes.join(';')}</td>
                             <td>{doc.data().date_ajout}</td>
                         </tr>
                         ))}
@@ -140,7 +138,7 @@ function AjoutParole() {
     const btnCircle = {
         borderRadius: '65%',
         left: '3%',
-        bottom: '3%'
+        bottom: '3%',
     }
 
     return (
@@ -149,7 +147,7 @@ function AjoutParole() {
                 <FontAwesomeIcon className="mr-1" icon={faPlus} />
                 Ajouter une chanson
             </Button>
-            <Button className="d-sm-none d-block fixed-bottom" size="lg"
+            <Button className="d-sm-none btn-sq-sm d-block fixed-bottom"
                 style={btnCircle}
                 onClick={handleOpen} variant="dark" >
                 <FontAwesomeIcon icon={faPlus} size="lg" />
@@ -168,7 +166,6 @@ function AjoutParole() {
                                 <Form.Control
                                     readOnly={submit} 
                                     required
-                                    value={item.titre}
                                     name='titre'
                                     onChange={handleChange}
                                     type="text" />
@@ -178,7 +175,6 @@ function AjoutParole() {
                                 <Form.Label>Artiste</Form.Label>
                                 <Form.Control
                                     readOnly={submit}
-                                    value={item.artistes}
                                     name='artistes'
                                     onChange={handleChange}
                                     type="text" placeholder="art1;art2" />
@@ -188,7 +184,6 @@ function AjoutParole() {
                             <Form.Label>Groupe</Form.Label>
                             <Form.Control
                                 readOnly={submit}
-                                value={item.groupes}
                                 name='groupes'
                                 onChange={handleChange}
                                 type="text" placeholder="grp1;grp2" />
@@ -199,7 +194,6 @@ function AjoutParole() {
                             <Form.Label>Parole</Form.Label>
                             <Form.Control
                                 readOnly={submit}
-                                value={item.paroles}
                                 name='paroles'
                                 onChange={handleChange}
                                 as="textarea" rows="6" />
@@ -209,7 +203,8 @@ function AjoutParole() {
                         <ButtonGroup>
                             <Button 
                                 size="sm" as={Link}
-                                to='/advance?create=lyrics' variant="link" onClick={handleClose}>
+                                to='/advance?create=lyrics' 
+                                variant="link" onClick={handleClose}>
                                 création/avancée
                             </Button>
                             <Button 

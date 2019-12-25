@@ -22,11 +22,11 @@ export default class Header extends PureComponent {
 
           {/* Singer */}
           <section>
-            <span className="ge-keyword">Chantée par: </span>{headerForm.singer}
+            <span className="ge-keyword">Chantée par: </span>{Array.isArray(headerForm.singer) ? headerForm.singer.join(' & ') : headerForm.singer}
           </section>
           {/* Composer */}
           <section>
-            <span className="ge-keyword">Composée par: </span>{headerForm.composer}
+            <span className="ge-keyword">Composée par: </span>{Array.isArray(headerForm.composer) ? headerForm.composer.join(' & ') : headerForm.composer}
           </section>
         </div>
 
