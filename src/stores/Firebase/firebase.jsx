@@ -29,10 +29,12 @@ const FirebaseContext = React.createContext({
     useDocument,
     useCollection,
     user: auth().currentUser,
-    addParole: (data) => { return new Promise() },
-    editParole: (data) => { return new Promise() },
-    doSignUpWithEmailAndPasswd: (data) => { return new Promise() },
-    doSignInWithEmailAndPasswd: (data) => { return new Promise() },
+    addParole: (data) => { },
+    editParole: (data) => { },
+    addFavoris: (ref) => { },
+    removeFavoris: (ref) => { },
+    doSignUpWithEmailAndPasswd: (data) => { },
+    doSignInWithEmailAndPasswd: (data) => { },
     doSignInWithFacebook: () => { },
     doSignInWithGoogle: () => { },
 
@@ -73,10 +75,9 @@ function Firebase({ children }) {
         })
     }
 
-    const doSignInWithGoogle = () =>
-        auth().signInWithPopup(new auth.GoogleAuthProvider())
+    const doSignInWithGoogle = () => {
+        return auth().signInWithPopup(new auth.GoogleAuthProvider())
             .then((authUser) => {
-                console.log(authUser)
                 firestore().collection('utilisateurs').doc(authUser.user.uid)
                     .set({
                         utilisateur: authUser.user.displayName,
@@ -87,59 +88,57 @@ function Firebase({ children }) {
                         nom: authUser.additionalUserInfo.profile.family_name
                     })
             })
+    }
 
-    const doSignInWithFacebook = () =>
-        auth().signInWithPopup(new auth.FacebookAuthProvider())
+    const doSignInWithFacebook = () => {
+        return auth().signInWithPopup(new auth.FacebookAuthProvider())
             .then((authUser) => {
                 firestore().collection('utilisateurs').doc(authUser.user.uid)
                     .set({
                         utilisateur: authUser.user.displayName,
-                        avatar: authUser.user.photoURL+ "?type=large",
+                        avatar: authUser.user.photoURL + "?type=large",
                         email: authUser.user.email,
                         date_creation: authUser.user.metadata.creationTime,
                         prenom: authUser.additionalUserInfo.profile.first_name,
                         nom: authUser.additionalUserInfo.profile.last_name
                     })
             })
+    }
 
     const doSignInWithEmailAndPasswd = (data) => {
-        return new Promise((resolve, reject) => {
-            auth().signInWithEmailAndPassword(data.email, data.passwd)
-                .then((auth) => { resolve(auth) })
-                .catch(e => { reject(e) })
-        })
+        return auth().signInWithEmailAndPassword(data.email, data.passwd)
     }
 
     const addParole = (data) => {
-        return new Promise((resolve, reject) => {
-            firestore().collection('chansons').add({ ...data })
-                .then(reference => {
-                    resolve(reference)
-                })
-                .catch(e => { reject(e) })
-        })
+        return firestore().collection('chansons').add({ ...data })
     }
 
     const editParole = (data) => {
-        return new Promise((resolve, reject) => {
-            const reference = firestore().doc(`paroles/${data.id}`)
-            const user_ = user ? user.displayName : 'anonymous'
-            firestore().runTransaction(async (tr) => {
-                const doc = await tr.get(reference)
-                const paroles = String(doc.data().paroles)
-                const utilisateur = String(doc.data().ajout_par)
-                tr.update(reference, {
-                    paroles: data.edit,
-                    editBy: user_,
-                    date_edit: data.date_edit
-                })
-                firestore().collection(`notifications/${utilisateur}/chansons`).add({
-                    paroles: [paroles, data.edit],
-                    reference,
-                    editee_par: user_
-                })
+        const reference = firestore().doc(`paroles/${data.id}`)
+        const user_ = user ? user.displayName : 'anonymous'
+        return firestore().runTransaction(async (tr) => {
+            const doc = await tr.get(reference)
+            const paroles = String(doc.data().paroles)
+            const utilisateur = String(doc.data().ajout_par)
+            tr.update(reference, {
+                paroles: data.edit,
+                editBy: user_,
+                date_edit: data.date_edit
+            })
+            return firestore().collection(`notifications/${utilisateur}/chansons`).add({
+                paroles: [paroles, data.edit],
+                reference,
+                editee_par: user_
             })
         })
+    }
+
+    const addFavoris = (ref) => {
+        return firestore().doc(ref).update({favoris: firestore.FieldValue.arrayUnion(user.uid)})
+    }
+
+    const removeFavoris = (ref) => {
+        return firestore().doc(ref).update({favoris: firestore.FieldValue.arrayRemove(user.uid)})
     }
 
     const firebase = {
@@ -152,6 +151,8 @@ function Firebase({ children }) {
         user,
         addParole,
         editParole,
+        addFavoris,
+        removeFavoris,
         doSignUpWithEmailAndPasswd,
         doSignInWithEmailAndPasswd,
         doSignInWithFacebook,
