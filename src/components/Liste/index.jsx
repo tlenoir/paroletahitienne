@@ -54,9 +54,6 @@ export default function Liste() {
                                     <td>
                                         {doc.data().titre}
                                         {
-                                            console.log(doc.data())
-                                        }
-                                        {
                                             firebase.user && doc.data().favoris && doc.data().favoris.find(element => element === firebase.user.uid)
                                             &&
                                             <FontAwesomeIcon icon={faStar} color='yellow' pull='right' />

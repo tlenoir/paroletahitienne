@@ -12,13 +12,13 @@ export default function Favoris({ uid }) {
     const firebase = useContext(FirebaseContext)
 
     const [value, loading, error] = firebase.useCollection(
-        firebase.firestore().collection(`favoris/${uid}/all`),
+        firebase.firestore().collection('chansons').where("favoris", "array-contains", uid),
         {
             snapshotListenOptions: { includeMetadataChanges: true },
         })
 
     const handleDelete = (ref, event) => {
-        firebase.firestore().doc(ref).delete()
+        firebase.removeFavoris(ref)
         event.preventDefault()
     }
 
@@ -49,7 +49,7 @@ export default function Favoris({ uid }) {
                                 <footer className="blockquote-footer">
                                     Ajoutée par <cite title={doc.data().ajout_par}>{doc.data().createBy}</cite>
                                 </footer>
-                                <Card.Link as={Link} to={`/liste=${doc.data().id}`}>
+                                <Card.Link as={Link} to={`/liste=${doc.id}`}>
                                     Consulter
                                 </Card.Link>
                             </Card.Body>
