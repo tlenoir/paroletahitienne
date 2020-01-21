@@ -1,7 +1,7 @@
 {
   "homepage": "http://tlenoir.github.io/paroletahitienne/",
   "name": "paroleheritage",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
