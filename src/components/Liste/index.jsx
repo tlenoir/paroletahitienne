@@ -59,8 +59,8 @@ export default function Liste() {
                                             <FontAwesomeIcon icon={faStar} color='yellow' pull='right' />
                                         }
                                     </td>
-                                    <td>{doc.data().artistes.join(';')}</td>
-                                    <td>{doc.data().groupes.join(';')}</td>
+                                    <td>{doc.data().artistes.join(', ')}</td>
+                                    <td>{doc.data().groupes.join(', ')}</td>
                                     <td className="d-none d-sm-block">{doc.data().date_ajout}</td>
                                 </tr>
                             ))}
