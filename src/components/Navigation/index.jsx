@@ -3,6 +3,7 @@ import { Navbar, Nav } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import routes from "../../constants/routes"
 import Session from "../Session/index"
+import { RechercheForm } from "../Recherche/index"
 
 export default function Navigation() {
     return (
@@ -17,6 +18,7 @@ export default function Navigation() {
                         </LinkContainer>
                     ))}
                 </Nav>
+                <RechercheForm />
                 <Session />
             </Navbar.Collapse>
         </Navbar>
