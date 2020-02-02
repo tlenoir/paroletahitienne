@@ -14,6 +14,13 @@ export default function AjoutParole() {
     const firebase = useContext(FirebaseContext)
     const user = firebase.user
 
+    const [artists] = firebase.useCollection(
+        firebase.firestore().collection('artistes')
+    )
+    const [groups] = firebase.useCollection(
+        firebase.firestore().collection('groupes')
+    )
+
     const [validated, setValidated] = useState(false)
     const [submit, setSubmit] = useState(false)
     const [show, setShow] = useState(false)
@@ -26,7 +33,12 @@ export default function AjoutParole() {
 
     const handleOpen = () => setShow(true)
     const handleClose = () => setShow(false)
-    const handleChange = (event) => setItem({ ...item, [event.target.name]: event.target.value })
+    const handleChange = (event) => {
+        setItem({
+            ...item,
+            [event.target.name]: event.target.value,
+        })
+    }
 
     const handleSubmit = (event) => {
         const form = event.currentTarget
@@ -37,8 +49,8 @@ export default function AjoutParole() {
                 date_ajout: moment().local('fr').format('LLL'),
                 ajout_par: user ? user.displayName : 'anonymous',
                 uid: user ? user.uid : 'anonymous',
-                artistes: item.artistes.length > 0 ? item.artistes.split(';') : ['Inconnu'],
-                groupes: item.groupes.length > 0 ? item.groupes.split(';') : ['Inconnu']
+                artistes: item.artistes.length > 0 ? item.artistes.split(' & ') : ['Inconnu'],
+                groupes: item.groupes.length > 0 ? item.groupes.split(' & ') : ['Inconnu']
             })
             setSubmit(true)
         }
@@ -109,17 +121,33 @@ export default function AjoutParole() {
                                     name='artistes'
                                     value={item.artistes}
                                     onChange={handleChange}
-                                    type="text" placeholder="art1;art2" />
+                                    list="datalistArtiste"
+                                    type="text" placeholder="art1 & art2" />
+                                <datalist id="datalistArtiste">
+                                    {artists &&
+                                        artists.docs.map((doc, i) => (
+                                            <option key={i} value={doc.data().nom}></option>
+                                        ))
+                                    }
+                                </datalist>
                             </Form.Group>
                         </Form.Row>
-                        <Form.Group controlId="formGridGroup">
+                        <Form.Group controlId="formGridGroupe">
                             <Form.Label>Groupe</Form.Label>
                             <Form.Control
                                 readOnly={submit}
                                 name='groupes'
                                 value={item.groupes}
                                 onChange={handleChange}
-                                type="text" placeholder="grp1;grp2" />
+                                list="datalistGroupe"
+                                type="text" placeholder="grp1 & grp2" />
+                            <datalist id="datalistGroupe">
+                                {groups &&
+                                    groups.docs.map((doc, i) => (
+                                        <option key={i} value={doc.data().nom}></option>
+                                    ))
+                                }
+                            </datalist>
                         </Form.Group>
 
                         <Form.Group controlId="exampleForm.ControlParole">

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 import routes, { routesParams } from '../../constants/routes'
+import { FacebookProvider } from 'react-facebook'
 import { Firebase } from "../../stores/Firebase/index"
 import { Themes } from "../../stores/Themes/index"
 import Authentization from "../../stores/Authentication/index"
@@ -14,15 +15,17 @@ export default function App() {
         <HashRouter basename='/'>
             <Themes>
                 <Firebase>
-                    <Navigation />
-                    <Container>
-                        <Authentization>
-                            <Switch>
-                                {routes.map(route => <Route key={route.path} {...route} />)}
-                                {routesParams.map(route => <Route key={route.path} {...route} />)}
-                            </Switch>
-                        </Authentization>
-                    </Container>
+                    <FacebookProvider appId={process.env.REACT_APP_facebookId} >
+                        <Navigation />
+                        <Container>
+                            <Authentization>
+                                <Switch>
+                                    {routes.map(route => <Route key={route.path} {...route} />)}
+                                    {routesParams.map(route => <Route key={route.path} {...route} />)}
+                                </Switch>
+                            </Authentization>
+                        </Container>
+                    </FacebookProvider>
                 </Firebase>
             </Themes>
         </HashRouter>

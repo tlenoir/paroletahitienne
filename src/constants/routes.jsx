@@ -7,6 +7,7 @@ import SignIn from '../components/Session/signIn'
 import Profile from '../components/Profile/index'
 import AdvanceParole from '../components/Parole/AvanceParole/avance'
 import Recherche from '../components/Recherche/index'
+import Edition from '../components/Edition/index'
 
 import No404 from '../components/No404/index'
 
@@ -60,6 +61,11 @@ export const routesParams = [
     {
         path: "/search=:queries",
         component: Recherche,
+        exact: true,
+    },
+    {
+        path: "/edit=:id",
+        component: Edition,
         exact: true,
     },
     {

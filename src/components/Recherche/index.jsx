@@ -10,7 +10,7 @@ export default function Recherche() {
     const themes = useContext(ThemesContext)
     themes.updateTitle('Recherche')
     const [docs, loading, error] = firebase.useCollection(
-        firebase.firestore().collection('chansons').where('titre', 'in', queries.split('&'))
+        firebase.firestore().collection('chansons').where('index', 'array-contains-any', queries.split('&'))
     )
 
     return (
@@ -45,7 +45,7 @@ export function RechercheForm() {
             <Form inline onSubmit={handleSearch}>
                 <FormControl value={queries} name="queries"
                     type="text" onChange={handleChange} className="mr-sm-2" />
-                <Button type="submit" variant="outline-success">Recherche</Button>
+                <Button type="submit" variant="outline-success" className="mr-sm-1" >Recherche</Button>
             </Form>
         </React.Fragment>
     )

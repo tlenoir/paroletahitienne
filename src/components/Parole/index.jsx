@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { FirebaseContext } from "../../stores/Firebase"
 import { ThemesContext } from "../../stores/Themes/index"
 
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { Spinner, Breadcrumb, Alert, Card, } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit,faStar as faStarS } from '@fortawesome/free-solid-svg-icons'
@@ -14,6 +14,7 @@ export default function Parole() {
     const firebase = useContext(FirebaseContext)
     const themes = useContext(ThemesContext)
     const { id } = useParams()
+    const history = useHistory()
 
     const [itemPreview, setItemPreview] = useState({
         content: '',
@@ -45,6 +46,10 @@ export default function Parole() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [doc])
 
+    const handleEdit = () => {
+        history.push(`/edit=${id}`)
+    }
+
     const handleAddFavorite = () => {
         firebase.addFavoris(doc.ref.path)
     }
@@ -60,7 +65,7 @@ export default function Parole() {
             {doc && doc.exists &&
                 <Card>
                     <Breadcrumb>
-                        <Breadcrumb.Item>
+                        <Breadcrumb.Item onClick={handleEdit}>
                             Editée <FontAwesomeIcon size="lg" icon={faEdit} />
                         </Breadcrumb.Item>
                         {firebase.user &&

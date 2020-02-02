@@ -102,10 +102,10 @@ function NotificationContent({ uid }) {
                 {value.docs.map((doc) => (
                     <Row key={doc.id}>
                         <Col md={6}>
-                            <pre>{doc.data().parole[0]}</pre>
+                            <pre>{doc.data().parole}</pre>
                         </Col>
                         <Col md={6}>
-                            <pre>{doc.data().parole[1]}</pre>
+                            <pre>{doc.data().parole2}</pre>
                         </Col>
                     </Row>
                 ))}

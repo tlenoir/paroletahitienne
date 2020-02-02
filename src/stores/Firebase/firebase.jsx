@@ -30,7 +30,7 @@ const FirebaseContext = React.createContext({
     useCollection,
     user: auth().currentUser,
     addParole: (data) => { },
-    editParole: (data) => { },
+    editParole: (data, id) => { },
     addFavoris: (ref) => { },
     removeFavoris: (ref) => { },
     doSignUpWithEmailAndPasswd: (data) => { },
@@ -75,33 +75,29 @@ function Firebase({ children }) {
         })
     }
 
-    const doSignInWithGoogle = () => {
-        return auth().signInWithPopup(new auth.GoogleAuthProvider())
-            .then((authUser) => {
-                firestore().collection('utilisateurs').doc(authUser.user.uid)
-                    .set({
-                        utilisateur: authUser.user.displayName,
-                        avatar: authUser.user.photoURL,
-                        email: authUser.user.email,
-                        date_creation: authUser.user.metadata.creationTime,
-                        prenom: authUser.additionalUserInfo.profile.given_name,
-                        nom: authUser.additionalUserInfo.profile.family_name
-                    })
+    const doSignInWithGoogle = async () => {
+        const authUser = await auth().signInWithPopup(new auth.GoogleAuthProvider())
+        firestore().collection('utilisateurs').doc(authUser.user.uid)
+            .set({
+                utilisateur: authUser.user.displayName,
+                avatar: authUser.user.photoURL,
+                email: authUser.user.email,
+                date_creation: authUser.user.metadata.creationTime,
+                prenom: authUser.additionalUserInfo.profile.given_name,
+                nom: authUser.additionalUserInfo.profile.family_name
             })
     }
 
-    const doSignInWithFacebook = () => {
-        return auth().signInWithPopup(new auth.FacebookAuthProvider())
-            .then((authUser) => {
-                firestore().collection('utilisateurs').doc(authUser.user.uid)
-                    .set({
-                        utilisateur: authUser.user.displayName,
-                        avatar: authUser.user.photoURL + "?type=large",
-                        email: authUser.user.email,
-                        date_creation: authUser.user.metadata.creationTime,
-                        prenom: authUser.additionalUserInfo.profile.first_name,
-                        nom: authUser.additionalUserInfo.profile.last_name
-                    })
+    const doSignInWithFacebook = async () => {
+        const authUser = await auth().signInWithPopup(new auth.FacebookAuthProvider())
+        firestore().collection('utilisateurs').doc(authUser.user.uid)
+            .set({
+                utilisateur: authUser.user.displayName,
+                avatar: authUser.user.photoURL + "?type=large",
+                email: authUser.user.email,
+                date_creation: authUser.user.metadata.creationTime,
+                prenom: authUser.additionalUserInfo.profile.first_name,
+                nom: authUser.additionalUserInfo.profile.last_name
             })
     }
 
@@ -109,24 +105,35 @@ function Firebase({ children }) {
         return auth().signInWithEmailAndPassword(data.email, data.passwd)
     }
 
-    const addParole = (data) => {
-        return firestore().collection('chansons').add({ ...data })
+    const addParole = async (data) => {
+        const index = combineArray(data)
+        await firestore().collection('chansons').add({
+            ...data,
+            index
+        })
+            .then(() => {
+                searchArtistOrGroup(data)
+            })
     }
 
-    const editParole = (data) => {
-        const reference = firestore().doc(`paroles/${data.id}`)
+    const editParole = (data, id) => {
+        const reference = firestore().doc(`chansons/${id}`)
         const user_ = user ? user.displayName : 'anonymous'
+        const uid = user ? user.uid : 'anonymous'
+        const index = combineArray(data)
+        searchArtistOrGroup(data)
+
         return firestore().runTransaction(async (tr) => {
             const doc = await tr.get(reference)
             const paroles = String(doc.data().paroles)
-            const utilisateur = String(doc.data().ajout_par)
             tr.update(reference, {
-                paroles: data.edit,
-                editBy: user_,
-                date_edit: data.date_edit
+                ...data,
+                index,
+                edit_par: user_,
             })
-            return firestore().collection(`notifications/${utilisateur}/chansons`).add({
-                paroles: [paroles, data.edit],
+            return firestore().collection(`notifications/${uid}/chansons`).add({
+                paroles2: data.paroles,
+                paroles1: paroles,
                 reference,
                 editee_par: user_
             })
@@ -134,11 +141,11 @@ function Firebase({ children }) {
     }
 
     const addFavoris = (ref) => {
-        return firestore().doc(ref).update({favoris: firestore.FieldValue.arrayUnion(user.uid)})
+        return firestore().doc(ref).update({ favoris: firestore.FieldValue.arrayUnion(user.uid) })
     }
 
     const removeFavoris = (ref) => {
-        return firestore().doc(ref).update({favoris: firestore.FieldValue.arrayRemove(user.uid)})
+        return firestore().doc(ref).update({ favoris: firestore.FieldValue.arrayRemove(user.uid) })
     }
 
     const firebase = {
@@ -157,6 +164,56 @@ function Firebase({ children }) {
         doSignInWithEmailAndPasswd,
         doSignInWithFacebook,
         doSignInWithGoogle
+    }
+
+    const combineArray = (data) => {
+        const paroleIndex = data.paroles.replace(/(\[).+?(\])/g, "").replace(/\r?\n/g, " ").split(' ')
+        const dataIndex = {
+            ...data,
+            paroles: ''
+        }
+        return [].concat(paroleIndex, dataIndex.artistes, dataIndex.groupes, dataIndex.titre);
+    }
+
+    const searchArtistOrGroup = (data) => {
+        if (data.artistes[0] !== 'Inconnu')
+            firestore().collection('artistes').where('nom', 'in', data.artistes).get()
+                .then((docs) => {
+                    if (docs.empty) {
+                        data.artistes.forEach(element => {
+                            firestore().collection('artistes').add({
+                                nom: element
+                            })
+                        })
+                    }
+                    else {
+                        data.artistes.forEach(element => {
+                            if (!docs.docs.find(element_ => element_.data().nom === element))
+                                firestore().collection('artistes').add({
+                                    nom: element
+                                })
+                        })
+                    }
+                })
+        if (data.groupes[0] !== 'Inconnu')
+            firestore().collection('groupes').where('nom', 'in', data.groupes).get()
+                .then((docs) => {
+                    if (docs.empty) {
+                        data.groupes.forEach(element => {
+                            firestore().collection('groupes').add({
+                                nom: element
+                            })
+                        })
+                    }
+                    else {
+                        data.groupes.forEach(element => {
+                            if (!docs.docs.find(element_ => element_.data().nom === element))
+                                firestore().collection('groupes').add({
+                                    nom: element
+                                })
+                        })
+                    }
+                })
     }
 
     return (
