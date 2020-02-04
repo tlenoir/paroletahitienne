@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b2795cf9e929441d9cfd9bafe89c6ee5",
+    "revision": "180ad7cb892786dfd2628f9134be9afc",
     "url": "/paroletahitienne/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/paroletahitienne/static/css/2.17e5ed98.chunk.css"
   },
   {
-    "revision": "bfebf501d978615dad80",
+    "revision": "649665565d8464c2941f",
     "url": "/paroletahitienne/static/css/main.108dcaf2.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/paroletahitienne/static/js/2.a55fe900.chunk.js.LICENSE"
   },
   {
-    "revision": "bfebf501d978615dad80",
-    "url": "/paroletahitienne/static/js/main.645a0717.chunk.js"
+    "revision": "649665565d8464c2941f",
+    "url": "/paroletahitienne/static/js/main.24cc4057.chunk.js"
   },
   {
     "revision": "64167b8ebfefca0f2d2a",
