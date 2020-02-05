@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { FirebaseContext } from '../../stores/Firebase/index'
 import { ThemesContext } from '../../stores/Themes/index'
-import { Form, Button, FormControl } from 'react-bootstrap'
+import { Card, Alert, Spinner, CardColumns, Form, FormControl, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 export default function Recherche() {
     const { queries } = useParams('queries')
@@ -14,17 +15,34 @@ export default function Recherche() {
     )
 
     return (
-        <div>
-            {loading && <p>Loading...</p>}
-            {error && <p>error</p>}
-            {docs && <div>
-                {docs.docs.map((doc, i) => (
-                    <div key={i}>
-                        <p>{doc.data().titre}</p>
-                    </div>
-                ))}
-            </div>}
-        </div>
+        <React.Fragment>
+            <Card className="mb-3" body>Recherche {queries.split('&').join(' & ')}</Card>
+            {error && <Alert variant="danger">Erreur: {error.message}</Alert>}
+            {loading && <Spinner animation="grow" variant="primary"></Spinner>}
+            {!loading && docs && (
+                <CardColumns>
+                    {docs.docs.map((doc, i) => (
+                        <Card key={doc.id} border="dark">
+                            <Card.Header>
+                                {i + 1}
+                            </Card.Header>
+                            <Card.Body>
+                                <Card.Title>{doc.data().titre}</Card.Title>
+                                <Card.Subtitle className="mb-2 text-muted">
+                                    Artiste: {doc.data().artistes.join(' & ')}
+                                </Card.Subtitle>
+                                <footer className="blockquote-footer">
+                                    Ajoutée par <cite title={doc.data().ajout_par}>{doc.data().ajout_par}</cite>
+                                </footer>
+                                <Card.Link as={Link} to={`/liste=${doc.id}`}>
+                                    Consulter
+                                </Card.Link>
+                            </Card.Body>
+                        </Card>
+                    ))}
+                </CardColumns>
+            )}
+        </React.Fragment>
     )
 }
 

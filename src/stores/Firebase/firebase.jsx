@@ -167,12 +167,14 @@ function Firebase({ children }) {
     }
 
     const combineArray = (data) => {
-        const paroleIndex = data.paroles.replace(/(\[).+?(\])/g, "").replace(/\r?\n/g, " ").split(' ')
-        const dataIndex = {
-            ...data,
-            paroles: ''
-        }
-        return [].concat(paroleIndex, dataIndex.artistes, dataIndex.groupes, dataIndex.titre);
+        const lowerCase = data.paroles.toLowerCase().replace(/(\[).+?(\])/g, "").replace(/(\{).+?(\})/g, "").replace(/(\|).+?(\|)/g, "").replace(/\r?\n/g, " ").split(' ');
+        const upperCase = data.paroles.toUpperCase().replace(/(\[).+?(\])/g, "").replace(/(\{).+?(\})/g, "").replace(/(\|).+?(\|)/g, "").replace(/\r?\n/g, " ").split(' ');
+        const capitalize = data.paroles.replace(/\b\w/g, l => l.toUpperCase()).replace(/(\[).+?(\])/g, "").replace(/(\{).+?(\})/g, "").replace(/(\|).+?(\|)/g, "").replace(/\r?\n/g, " ").split(' ');
+        const paroleIndex = data.paroles.replace(/(\[).+?(\])/g, "").replace(/(\{).+?(\})/g, "").replace(/(\|).+?(\|)/g, "").replace(/\r?\n/g, " ").split(' ');
+        const array = [].concat(paroleIndex, lowerCase,
+            upperCase, capitalize, data.artistes, data.groupes, data.titre);
+        const uniqueSet = new Set(array);
+        return [...uniqueSet];
     }
 
     const searchArtistOrGroup = (data) => {
