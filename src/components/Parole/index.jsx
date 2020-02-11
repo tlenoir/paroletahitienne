@@ -66,7 +66,7 @@ export default function Parole() {
                 <Card>
                     <Breadcrumb>
                         <Breadcrumb.Item onClick={handleEdit}>
-                            Editée <FontAwesomeIcon size="lg" icon={faEdit} />
+                            { doc.data().canEdit && <span>Editée <FontAwesomeIcon size="lg" icon={faEdit} /></span>}
                         </Breadcrumb.Item>
                         {firebase.user &&
                             <Breadcrumb.Item>

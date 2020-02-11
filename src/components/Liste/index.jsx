@@ -19,7 +19,8 @@ export default function Liste() {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const [docs, loading, error] = firebase.useCollection(
-        firebase.firestore().collection('chansons').orderBy(state.orderBy),
+        firebase.firestore().collection('chansons').where('visible', '==', 'public')
+            .orderBy(state.orderBy),
         {
             snapshotListenOptions: { includeMetadataChanges: true }
         }
