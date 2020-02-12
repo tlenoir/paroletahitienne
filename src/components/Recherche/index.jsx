@@ -11,7 +11,7 @@ export default function Recherche() {
     const themes = useContext(ThemesContext)
     themes.updateTitle('Recherche')
     const [docs, loading, error] = firebase.useCollection(
-        firebase.firestore().collection('chansons').where('index', 'array-contains-any', queries.split('&'))
+        firebase.firestore().collection('chansons').where('visible', '==', 'public').where('index', 'array-contains-any', queries.split('&'))
     )
 
     return (

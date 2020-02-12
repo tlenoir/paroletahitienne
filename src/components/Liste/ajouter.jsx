@@ -158,22 +158,24 @@ export default function AjoutParole() {
                             </datalist>
                         </Form.Group>
 
-                        <Form.Group controlId="formGridVisible">
-                            <Form.Label>Visibilité de la chanson</Form.Label>
-                            <Form.Control required
-                                onChange={handleChange}
-                                name="visible"
-                                value={item.visible} as="select">
-                                <option value='public' >public</option>
-                                <option value='privée' >privée</option>
-                            </Form.Control>
-                            <Form.Check 
-                                name="canEdit" 
-                                onChange={handleCheckbox}
-                                checked={item.canEdit}
-                                className="text-left" type="checkbox" 
-                                label="autoriser la modification par un-tier" />
-                        </Form.Group>
+                        {user &&
+                            <Form.Group controlId="formGridVisible">
+                                <Form.Label>Visibilité de la chanson</Form.Label>
+                                <Form.Control required
+                                    onChange={handleChange}
+                                    name="visible"
+                                    value={item.visible} as="select">
+                                    <option value='public' >public</option>
+                                    <option value='privée' >privée</option>
+                                </Form.Control>
+                                <Form.Check
+                                    name="canEdit"
+                                    onChange={handleCheckbox}
+                                    checked={item.canEdit}
+                                    className="text-left" type="checkbox"
+                                    label="autoriser la modification par un-tier" />
+                            </Form.Group>
+                        }
 
 
                         <Form.Group controlId="exampleForm.ControlParole">
